@@ -1,11 +1,17 @@
 // import logo from './logo.svg';
 import { useState, useEffect } from 'react';
+import * as React from "react";
 import './App.css';
 import { Footer } from './components/Footer';
 import Navbar from './components/Navbar';
 import { Todos } from './components/Todos';
 import AddTodo from './components/AddTodo';
-// import About from './components/About';
+import About from './components/About';
+import {
+    createBrowserRouter,
+    RouterProvider,
+} from "react-router-dom";
+import Contact from './components/Contact';
 
 
 
@@ -16,6 +22,7 @@ function App() {
     } else {
         initTodo = JSON.parse(localStorage.getItem("todos"));
     }
+
 
     const onDelete = (todo) => {
         console.log("I am Ondelete", todo);
@@ -71,11 +78,33 @@ function App() {
         localStorage.setItem("todos", JSON.stringify(todos));
     }, [todos])
 
+    const router = createBrowserRouter([
+        {
+            path: "/",
+            element: (
+                <div>
+                    <AddTodo addTodo={addTodo} />
+                    <Todos todos={todos} onDelete={onDelete} />
+                </div>
+            ),
+        },
+        {
+            path: "about",
+            element: <About/>,
+        },
+        {
+            path: "contact",
+            element: <Contact/>,
+        },
+    ]);
+
+
     return (
         <>
             <Navbar title="To Dos List" searchBar={true} />
-            <AddTodo addTodo={addTodo} />
-            <Todos todos={todos} onDelete={onDelete} />
+            <React.StrictMode>
+                <RouterProvider router={router} />
+            </React.StrictMode>
             <Footer />
         </>
     );
